@@ -28,7 +28,7 @@
 		<div class="container container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-				<a class="navbar-brand" href="https://geo-social.com">Geog 3540</a>
+				<a class="navbar-brand" href="index.html">Drew's Portfolio</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="defaultNavbar1">
@@ -36,10 +36,10 @@
 
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="../shortbio.html">About</a></li>
-							<li><a href="../files/koylu_cv_23.pdf">Resume</a></li>
+							<li><a href="shortbio.html">About</a></li>
+							<li><a href="Files/Resume.pdf">Resume</a></li>
 							<li class="divider"></li>
-							<li><a href="caglar-koylu@uiowa.edu">Contact</a></li>
+							<li><a href="mailto:drew-dollison@uiowa.edu">Contact</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -53,12 +53,12 @@
 	<div class="container">
 		<div class="content">
 			<div class="row">
-					<h1>SNAP Benefits in Manhattan</h1>
+					<h1>Water Sources and Race/Ethicity in Arizona</h1>
 			</div>
 			<hr />
 			<div class="row">
 				<div class="col-sm-4">
-					<p>Data from <a href="data.iowa.gov">Data.Iowa.gov</a>, maps by Drew Dollison.</p>
+					<p>Data from <a href="https://waterdata.usgs.gov/">waterdata.usgs.gov</a> and <a href="https://data.census.gov/"> data.census.gov</a>, maps by Drew Dollison.</p>
 				</div>
 				<div class='col-sm-8 mapButtons'>
 					<span class="pull-right">
@@ -82,12 +82,12 @@
 			<br />
 			<div class="row">
 				<div class="col-sm-6">
-					<span><p><h3 class='mapTitle'>SNAP Benefits</h3>% households that receive Supplemental Nutrition Assistance Program (SNAP).</p></span>
+					<span><p><h3 class='mapTitle'>Percent White by County</h3>% of White resisdents in each Arizona County.</p></span>
 					<div id="divMap1"></div>
 					<div id="divHist1"></div>
 				</div>
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Kids</h3><p>% kids between 0 and 17 years old.</p>
+					<h3 class='mapTitle'>Surface Water</h3><p>% of residents using public surface water.</p>
 					<div id="divMap2"></div>
 					<div id="divHist2"></div>
 				</div>
@@ -95,12 +95,12 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Senior Citizens</h3><p>% senior citizens 65+ years old.</p>
+					<h3 class='mapTitle'>Ground Water</h3><p>% of residents that use public groundwater.</p>
 					<div id="divMap3"></div>
 					<div id="divHist3"></div>
 				</div>
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Poverty Rate</h3><p>% population with income at or below the Federal poverty thresholds.</p>
+					<h3 class='mapTitle'>Native American</h3><p>% of residents that are Native American.</p>
 					<div id="divMap4"></div>
 					<div id="divHist4"></div>
 				</div>
@@ -116,7 +116,7 @@
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	// TODO: Change the variables below to customize the small multiples interface for your data
-	var polygonJSONFile = 'data/manhattan.json'
+	var polygonJSONFile = 'ArizonawaterGeo.json'
 	// change the projection if needed *d3.geoAlbers()*
 	var projection = d3.geoTransverseMercator();
 	var widthheightRatio = 0.8;
@@ -127,10 +127,10 @@
 	var legendX = 0.84, legendY = 0.5
 
 	// id attribute and the name attribute to be used in the tooltip
-	var idAttribute = 'GEOID', nameAttribute = 'GEOID';
+	var idAttribute = 'OBJECTID', nameAttribute = 'NAME';
 
 	// Find the abbreviations of color names from https://colorbrewer2.org/
-	var colors =  colorbrewer.YlGnBu;
+	var colors =  colorbrewer.BuPu;
 
 	// Chart/map attributes (variables) and formats based on the divs defined above
 	// For attribute 1 (the same for all others), see the description of the parameters below.
@@ -139,17 +139,17 @@
 	// att1format: enter the d3.format string to display the variables in the format you like
 	// Check this link on how to specify the desired format:
 	// https://observablehq.com/@d3/d3-format
-	var att1 = 'food_accessibility_2015_TractSNAP', att1alias = '% SNAP Benefits', att1format = '.0f',
-	att2 = 'food_accessibility_2015_TractKids', att2alias =  '% Kids 0-17', att2format = '.0f',
-	att3 = 'food_accessibility_2015_TractSeniors', att3alias = '% Seniors 65+', att3format = '.0f',
-	att4 = 'food_accessibility_2015_PovertyRate', att4alias = 'Poverty Rate', att4format = '.0f';
+	var att1 = 'PCT_WHITE_', att1alias = '% White', att1format = '.0f',
+	att2 = 'ArizonaWater_SERSURFACE', att2alias =  '% of population served by public groundwater', att2format = '.0f',
+	att3 = 'ArizonaWater_SERGROUND', att3alias = '% of population served by public surface water', att3format = '.0f',
+	att4 = 'PCT_NATIVE', att4alias = '% Native American', att4format = '.0f';
 
   // enter below all variables that should be normalized. If you would like to multiple the variables
 	// with a constant value enter them in multiplyBy array. If there is no need for multiplication,
 	// simply enter 1 for each value in multiplyBy.
-  var attributesToBeNormalized = [att1, att2, att3];
-	var multiplyBy = [100, 100, 100];
-	var divideBy = ['food_accessibility_2015_OHU2010', 'food_accessibility_2015_POP2010', 'food_accessibility_2015_POP2010'];
+  var attributesToBeNormalized = [att2, att3];
+	var multiplyBy = [100000, 100000];
+	var divideBy = ['TOTAL_POP', 'TOTAL_POP'];
 	// if your variables are not raw counts and they are already normalized, comment out above, and
 	//uncomment below:
 	// var attributesToBeNormalized = [];
